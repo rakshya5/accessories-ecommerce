@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Admin Products</title>
+    <link rel="stylesheet" href="/css/ViewProduct.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Products</h1>
+            <div class="action-buttons">
+               
+               
+            </div>
+        </header>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.price}"></td>
+                    <td><img th:src="@{/images/{path}(path=${product.imageUrl})}" alt="Product Image" width="50" height="50"></td>
+                    <td>
+                        <a th:href="@{/admin/edit-product/{id}(id=${product.id})}" class="action-btn">Edit</a>
+                        <a th:href="@{/admin/delete-product/{id}(id=${product.id})}" 
+   class="action-btn delete" 
+   onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

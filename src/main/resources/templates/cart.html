@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Your Cart</title>
+	<link rel="stylesheet" href="/css/cart.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<div class="cart-container">
+		<h1>Your Cart</h1>
+
+		<!-- Cart Items -->
+		<div class="cart-items" th:if="${cart != null && !cart.isEmpty()}">
+			<table class="cart-table">
+				<thead>
+					<tr>
+						<th>Image</th>
+						<th>Product Name</th>
+						<th>Quantity</th>
+						<th>Price</th>
+						<th>Total</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="cartItem : ${cart}">
+						<td><img th:src="@{'/images/' + ${cartItem.product.imageUrl}}" alt="Product Image"
+								class="cart-product-image" /></td>
+						<td th:text="${cartItem.product.name}"></td>
+						<td th:text="${cartItem.quantity}"></td>
+						<td th:text="${'Rs. ' + cartItem.product.price}"></td>
+						<td th:text="${'Rs. ' + cartItem.quantity * cartItem.product.price}"></td>
+						<td>
+							
+							<!-- Form for removing items from the cart -->
+							<form method="POST" th:action="@{/cart/remove}">
+								<input type="hidden" name="cartId" th:value="${cartItem.id}" />
+								<button type="submit" class="remove-btn">Remove</button>
+							</form>
+
+
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- Cart Summary -->
+		<div class="cart-summary" th:if="${cart != null && !cart.isEmpty()}">
+			<p>Total number of items: <span th:text="${cart.size()}"></span></p>
+			<p>Grand total amount: <span th:text="${'Rs. ' + grandTotal}"></span></p>
+		</div>
+
+		<!-- Cart Actions -->
+		<div class="cart-actions" th:if="${cart != null && !cart.isEmpty()}">
+			<form method="post" action="/cart/place-order">
+				<button type="submit" class="btn btn-primary">Place Order</button>
+			</form>
+		</div>
+
+		<!-- Empty Cart Message -->
+		<div th:if="${cart == null || cart.isEmpty()}" class="empty-cart-message">
+			<h2>Your cart is empty!</h2>
+			<p>Start shopping now and fill up your cart with amazing products.</p>
+		</div>
+		<a href="/product">Continue Shopping</a>
+
+	</div>
+</body>
+
+</html>

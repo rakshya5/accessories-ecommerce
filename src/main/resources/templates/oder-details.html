@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Order Details</title>
+     <link rel="stylesheet" type="text/css" href="/css/orderview.css">
+</head>
+<body>
+    <h1>Order Details - Order ID: <span th:text="${order.id}"></span></h1>
+    <p><strong>User:</strong> <span th:text="${order.user.name}"></span></p>
+    <p><strong>Order Date:</strong> <span th:text="${order.orderDate}"></span></p>
+    <p><strong>Total Amount:</strong> <span th:text="${order.totalAmount}"></span></p>
+
+    <h2>Order Items:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="orderItem : ${order.orderItems}">
+                <td th:text="${orderItem.product.name}"></td>
+                <td th:text="${orderItem.quantity}"></td>
+                <td th:text="${orderItem.price}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/admin/orders">Back to Orders</a>
+</body>
+</html>

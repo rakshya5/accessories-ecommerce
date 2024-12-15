@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products-TechHub Marketplace</title>
+    <link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+	
+	<nav>
+        <div class="nav-container">
+            <div class="logo">
+                <img src="/images/logo.webp" alt="TechHub Logo" class="logo-image">
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/product">Products</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <a href="/login">Login</a>
+            </div>
+            <div class="nav-actions">
+					<div class="search-container">
+            <form method="get" action="/product/search">
+                <input type="text" name="query" placeholder="Search for products...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        
+             <div class="cart-btn nav-button">
+				 <a href="/cart" class="cart-icon">
+                    <img src="/images/cart-icon.png" alt="Cart Icon" class="cart-icon">
+                    <span class="cart-count" th:text="${cart.size()}">0</span>
+                    </a>
+                </div>
+	     </div>
+                
+            </div>
+        
+    </nav>
+    <main>
+       
+
+        <!-- Product Section -->
+        <section id="featured-products">
+            <h2>Our Products</h2>
+            <div class="product-grid">
+
+                <!-- Show Message When No Products -->
+                <div th:if="${products == null or products.isEmpty()}" class="empty-products-message">
+                    <h2>No Matching Product Found!</h2>
+                </div>
+
+                <!-- Product Items -->
+                <div class="product-card" th:each="product : ${products}">
+                    <form action="/cart/add" method="POST">
+                        <img th:src="@{/images/{path}(path=${product.imageUrl})}" class="center">
+                        <h3 th:text="${product.name}"></h3>
+                        <p th:text="${' Rs. ' + product.price}"></p>
+                        <input type="hidden" name="productID" th:value="${product.id}" />
+                        <input type="hidden" name="quantity" value="1" />
+                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                    </form>
+
+                    <form action="/product/buyNow" method="POST">
+                        <input type="hidden" name="productID" th:value="${product.id}" />
+                        <button type="submit" class="buy-now-btn">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+     <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h5>TechHub</h5>
+                <p>Your one-stop shop for premium computer accessories.</p>
+            </div>
+            <div class="footer-section">
+                <h5>Quick Links</h5>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/product">Products</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h5>Connect With Us</h5>
+                <div class="social-links">
+                    <a href="#" class="social-icon">Facebook</a>
+                    <a href="#" class="social-icon">Instagram</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+</body>
+
+</html>
