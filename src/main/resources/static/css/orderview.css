@@ -50,19 +50,52 @@ th {
     background-color: #f2f2f2;
 }
 
-/* Buttons */
-button {
-    background-color: #4CAF50;
+/* View Details Button */
+.view-details-btn {
+    background-color: #007bff; /* Blue */
     color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
+    padding: 8px 12px;
+    text-decoration: none;
     border-radius: 5px;
-    font-size: 16px;
+    display: inline-block;
+    margin-right: 5px;
 }
 
-button:hover {
-    background-color: #45a049;
+.view-details-btn:hover {
+    background-color: #0056b3; /* Darker blue */
+}
+
+/* Completed Button */
+.completed-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.completed-btn:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+/* Cancelled Button */
+.cancelled-btn {
+    background-color: #f44336; /* Red */
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.cancelled-btn:hover {
+    background-color: #e53935; /* Darker red */
 }
 
 button:focus {

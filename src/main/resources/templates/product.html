@@ -20,8 +20,10 @@
                 <a href="/product">Products</a>
                 <a href="/about">About</a>
                 <a href="/contact">Contact</a>
-                <a href="/login">Login</a>
+                <a href="/login" th:if="${user == null}">Login</a>
+                <a href="/logout" th:if="${user != null}">Logout</a>
             </div>
+            
             <div class="nav-actions">
 					<div class="search-container">
             <form method="get" action="/product/search">
@@ -30,7 +32,7 @@
             </form>
         </div>
         
-             <div class="cart-btn nav-button">
+             <div class="cart-btn nav-button" th:if="${user != null}">
 				 <a href="/cart" class="cart-icon">
                     <img src="/images/cart-icon.png" alt="Cart Icon" class="cart-icon">
                     <span class="cart-count" th:text="${cart.size()}">0</span>

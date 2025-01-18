@@ -109,5 +109,10 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	// Method to check if the user is an admin
+    public boolean isAdmin() {
+        return this.type == UserType.ADMIN;
+    }
+	
 	
 }

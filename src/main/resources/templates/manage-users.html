@@ -8,23 +8,24 @@
     <link rel="stylesheet" href="/css/manage-users.css">
 </head>
 <body>
-    <h1>Manage Users</h1>
+    <h1>View Users</h1>
     <table>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.email}"></td>
-            <td>
-                <a th:href="@{/admin/edit-user/{id}(id=${user.id})}">Edit</a>
-                <a th:href="@{/admin/delete-user/{id}(id=${user.id})}">Delete</a>
-            </td>
-        </tr>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                
+            </tr>
+        </tbody>
     </table>
 </body>
 </html>

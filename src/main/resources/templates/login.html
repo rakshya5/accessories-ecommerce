@@ -26,6 +26,9 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
+            
+            <input type="hidden" name="redirectTo" th:value="${loginAction}" >
+            
             <button type="submit" class="btn">Login</button>
         </form>
         <p>Don't have an account? <a href="/register">Register</a></p>

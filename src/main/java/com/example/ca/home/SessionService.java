@@ -51,7 +51,13 @@ public class SessionService {
 			}
 		}
 
-		Optional<User> optionalUser = userRepository.findBySession(session);
+		Optional<User> optionalUser = Optional.empty();
+
+		if (session != null) {
+
+			optionalUser = userRepository.findBySession(session);
+
+		}
 
 		if (optionalUser.isPresent()) {
 			return optionalUser.get();

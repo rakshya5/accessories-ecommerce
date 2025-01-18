@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Orders</title>
-   <link rel="stylesheet" type="text/css" href="/css/orderview.css">
+    <link rel="stylesheet" type="text/css" href="/css/orderview.css">
 </head>
 <body>
     <h1>Orders</h1>
@@ -15,6 +13,7 @@
                 <th>User</th>
                 <th>Order Date</th>
                 <th>Total Amount</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -22,9 +21,19 @@
             <tr th:each="order : ${orders}">
                 <td th:text="${order.id}"></td>
                 <td th:text="${order.user.fullname}"></td>
-                <td th:text="${order.orderDate}"></td>
+                <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td th:text="${order.totalAmount}"></td>
-                <td><a th:href="@{/admin/order/{id}(id=${order.id})}">View Details</a></td>
+                <td th:text="${order.status}"></td>
+                <td>
+                    <a th:href="@{/admin/order/{id}(id=${order.id})}" class="view-details-btn">View Details</a>
+                    <!-- Add buttons to change status within table cell -->
+                    <form th:action="@{/admin/order/update-status/{id}(id=${order.id})}" method="post" style="display:inline;">
+                        <button type="submit" name="status" value="COMPLETED" class="completed-btn">Mark as Completed</button>
+                    </form>
+                    <form th:action="@{/admin/order/update-status/{id}(id=${order.id})}" method="post" style="display:inline;">
+                        <button type="submit" name="status" value="CANCELLED" class="cancelled-btn">Cancel Order</button>
+                    </form>
+                </td>
             </tr>
         </tbody>
     </table>

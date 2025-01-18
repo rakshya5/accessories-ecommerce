@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form</title>
     <link rel="stylesheet" href="/css/register.css">
-
 </head>
 
 <body>
@@ -15,30 +14,29 @@
         <form action="/register" method="post">
             <br>
             <label for="fullname">Fullname</label>
-            <input type="text" id="fullname" name="fullname">
+            <input type="text" id="fullname" name="fullname" required>
             </br>
 
             <br>
             <label for="username">Username</label>
-            <input type="text" id="username" name="username">
-             <span th:if="${error?.username}" th:text="${error.username}"></span>
+            <input type="text" id="username" name="username" required>
+            <span th:if="${error?.username}" th:text="${error.username}" ></span>
             </br>
 
             <br>
             <label for="email">Email</label>
-            <input type="text" id="email" name="email">
-            <span th:if="${error?.email}" th:text="${error?.email}"></span>
+            <input type="email" id="email" name="email" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Please enter a valid email address.">
+            <span th:if="${error?.email}" th:text="${error?.email}" style="color: red;"></span>
             </br>
 
             <br>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password">
+            <input type="password" id="password" name="password" required>
             </br>
 
             <br>
             <input type="submit" value="Register">
             </br>
-
         </form>
     </div>
 </body>

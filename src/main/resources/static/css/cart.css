@@ -139,4 +139,52 @@ button:hover, .remove-btn:hover {
     .empty-cart-message p {
         font-size: 16px;
     }
+    
+   /* Quantity Input Container */
+.quantity-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background-color: #f8f9fa; /* Light background */
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 120px;
+    margin: auto;
+}
+
+/* Buttons for Increment and Decrement */
+.quantity-input button {
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.3s;
+}
+
+.quantity-input button:hover {
+    color: #007bff; /* Change to primary blue on hover */
+}
+
+/* Quantity Display */
+.quantity-input input[type="number"] {
+    width: 40px;
+    text-align: center;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: transparent;
+    color: #333;
+    appearance: none; /* Remove arrows in input number */
+    -moz-appearance: textfield; /* Remove arrows in Firefox */
+}
+
+.quantity-input input[type="number"]:focus {
+    outline: none;
+}
 }

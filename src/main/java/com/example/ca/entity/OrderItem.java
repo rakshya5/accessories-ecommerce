@@ -12,8 +12,8 @@ public class OrderItem {
 
     @ManyToOne
     private Order order;
-
-    @ManyToOne
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
     private int quantity;

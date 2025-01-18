@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Payment</title>
+    <link rel="stylesheet" href="/css/Payment.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div class="payment-container">
+        <h1>Payment</h1>
+
+        <p>Order ID: <span th:text="${orderId}"></span></p>
+        <p>Amount to Pay: <span th:text="${'Rs. ' + totalAmount}"></span></p>
+
+        <form method="post" th:action="@{/payment/complete}">
+            <input type="hidden" name="orderId" th:value="${orderId}">
+            <input type="hidden" name="amount" th:value="${totalAmount}">
+            <button type="submit" class="btn btn-primary">Pay Now</button>
+        </form>
+    </div>
+</body>
+
+</html>

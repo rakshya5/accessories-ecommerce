@@ -26,6 +26,11 @@ public class ProductService {
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
     }
+    
+ // Find a product by its ID and return as Product object 
+    public Product findById(Long id) { 
+    	return productRepository.findById(id).orElse(null); 
+    	}
 
     // Create a new product
     public Product createProduct(Product product) {
@@ -46,17 +51,22 @@ public class ProductService {
 
     // Delete a product by ID
     public void deleteProduct(Long id) {
-    	System.out.println("delete");
-        // Check if the product is in any cart before deleting
+        System.out.println("delete");
+
+        // Check if the product is in the cart
         boolean isProductInCart = cartService.isProductInCart(id);
         if (isProductInCart) {
             throw new RuntimeException("Cannot delete product as it is in the cart.");
         }
 
-        // If not in the cart, proceed with deletion
+        // If the product exists, proceed with deletion
         if (!productRepository.existsById(id)) {
             throw new RuntimeException("Product not found with id: " + id);
         }
+
+        // Delete the product
         productRepository.deleteById(id);
     }
+
+
 }

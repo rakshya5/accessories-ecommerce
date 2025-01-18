@@ -322,25 +322,26 @@ nav {
     font-weight: bold;
 }
 
-.add-to-cart {
-    background-color: rgb(128, 128, 255);
-    color: white;
-    border: none;
-    padding: 8px 16px;
+.product-card button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 10px;
     transition: background-color 0.3s ease;
+    border: none; 
 }
 
-.buy-now {
+.product-card .add-to-cart-btn {
+    background-color: rgb(128, 128, 255);
+    color: white;
+}
+
+.product-card .buy-now-btn {
     background-color: #54c146;
     color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-left: 10px;
+    margin-top: 5px; /* Space between buttons */
 }
 
 

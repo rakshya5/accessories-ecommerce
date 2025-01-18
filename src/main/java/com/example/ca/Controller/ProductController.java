@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.ca.entity.Cart;
 import com.example.ca.home.SessionService;
@@ -38,36 +39,65 @@ public class ProductController {
     // Method to show the product page
     @GetMapping("/product")
     public String productPage(Model model, HttpServletRequest request) {
+    	
+//    	System.out.println("In /product page");
+    	
         // Get the authenticated user from session
         User user = sessionService.getAuthenticatedUser(request);
+        
+//        System.out.println("after getAuthUser()");
         List<Cart> carts = new ArrayList<>();
 
         // If the user is authenticated, get their cart
         if (user != null) {
             carts = cartService.getCarts(user);
         }
+        
+//        System.out.println("after user not null");
 
         // Add products and cart information to the model
         model.addAttribute("products", productRepository.findAll());
         model.addAttribute("cart", carts);
         model.addAttribute("cartSize", carts.size()); // Add cart size
+        model.addAttribute("user", user);
 
         // Check if the user is an admin
-        String userType = (String) request.getSession().getAttribute("userType");
-        model.addAttribute("isAdmin", "ADMIN".equals(userType));
+//        String userType = (String) request.getSession().getAttribute("userType");
+//        model.addAttribute("isAdmin", "ADMIN".equals(userType));
 
         return "product"; // Return the product view
     }
     
-    @PostMapping("/buyNow")
-    public String buyNow(@RequestParam Long productID, Model model) {
-        // Fetch the product by ID
-        Product product = productService.getProductById(productID)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+    @PostMapping("/product/buyNow")
+    public String buyNow(@RequestParam("productID") Long productID, 
+                         RedirectAttributes redirectAttributes,
+                         HttpServletRequest request) {
+        
+        // Retrieve authenticated user from session
+        User user = sessionService.getAuthenticatedUser(request);
 
-        model.addAttribute("product", product);
-        return "checkout"; // Redirect to the checkout page
+        if (user == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
+        }
+
+        // Fetch the product by ID
+        Product product = productService.findById(productID);
+
+        if (product == null) {
+            // Handle product not found case
+            redirectAttributes.addFlashAttribute("error", "Product not found.");
+            return "redirect:/product";
+        }
+
+        // Add product to cart
+        AddToCartDTO cartDTO = new AddToCartDTO(productID, 1); // Create DTO
+        cartService.addItemToCart(user, cartDTO);
+
+        // Redirect to order success page
+        return "redirect:/cart";
     }
+
+    	
 
     // Method to handle product search
     @GetMapping("/product/search")

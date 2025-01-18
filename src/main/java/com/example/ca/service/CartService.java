@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ca.Controller.AddToCartDTO;
 import com.example.ca.entity.Cart;
@@ -19,8 +20,6 @@ import com.example.ca.repository.OrderItemRepository;
 import com.example.ca.repository.OrderRepository;
 import com.example.ca.repository.ProductRepository;
 
-import jakarta.transaction.Transactional;
-
 @Service
 public class CartService {
 
@@ -32,39 +31,71 @@ public class CartService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
-    
+
     @Autowired
-    private ProductRepository productRepository;  // Correctly injected here
+    private ProductRepository productRepository;
 
-
-    // Add item to the cart (now including productId)
+    /**
+     * Add an item to the cart. If the product already exists in the user's cart,
+     * update the quantity.
+     */
     public void addItemToCart(User user, AddToCartDTO dto) {
         Optional<Product> optionalProduct = productRepository.findById(dto.getProductID());
 
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
 
-            Cart cart = new Cart();
-            cart.setUser(user);
-            cart.setProduct(product);
-            cart.setQuantity(dto.getQuantity());
-
+            Optional<Cart> existingCart = cartRepository.findByUserAndProduct(user, product);
+            Cart cart;
+            if (existingCart.isPresent()) {
+                cart = existingCart.get();
+                cart.setQuantity(cart.getQuantity() + dto.getQuantity()); // Update quantity
+            } else {
+                cart = new Cart();
+                cart.setUser(user);
+                cart.setProduct(product);
+                cart.setQuantity(dto.getQuantity()); // New cart entry
+            }
             cartRepository.save(cart);
         }
     }
 
-    // Get all items in the cart for a user
+    /**
+     * Update the quantity of an item in the cart.
+     */
+    public void updateCartItem(long cartId, int quantity) {
+        if (quantity < 1) {
+            quantity = 1;
+        } else if (quantity > 5) {
+            quantity = 5;
+        }
+
+        Optional<Cart> optionalCart = cartRepository.findById(cartId);
+        if (optionalCart.isPresent()) {
+            Cart cart = optionalCart.get();
+            cart.setQuantity(quantity);
+            cartRepository.save(cart);
+        }
+    }
+
+    /**
+     * Get all items in the cart for a specific user.
+     */
     public List<Cart> getUserCart(Long userId) {
         List<Cart> cartItems = cartRepository.findByUserId(userId);
         return (cartItems != null && !cartItems.isEmpty()) ? cartItems : new ArrayList<>();
     }
 
-    // Remove an item from the cart by ID
+    /**
+     * Remove an item from the cart.
+     */
     public void removeItemFromCart(Long cartId) {
         cartRepository.deleteById(cartId);
     }
 
-    // Clear all items from the cart for a user
+    /**
+     * Clear the cart for a specific user.
+     */
     public String clearCart(Long userId) {
         List<Cart> cartItems = cartRepository.findByUserId(userId);
         if (cartItems.isEmpty()) {
@@ -74,27 +105,33 @@ public class CartService {
         return "Cart cleared successfully!";
     }
 
-    // Get all carts for a specific user
+    /**
+     * Get the cart items for a specific user.
+     */
     public List<Cart> getCarts(User user) {
         List<Cart> carts = cartRepository.findByUser(user);
         return carts != null ? carts : new ArrayList<>();
     }
 
-    // Check if the product exists in the cart
+    /**
+     * Check if a product is already in the cart.
+     */
     public boolean isProductInCart(Long productId) {
         List<Cart> cartItems = cartRepository.findByProductId(productId);
         return !cartItems.isEmpty();
     }
 
-    // Method to place the order
+    /**
+     * Place an order for the user by moving cart items to the order table.
+     */
     @Transactional
     public void placeOrder(User user) {
         // Step 1: Create the Order
         Order order = new Order();
         order.setUser(user);
-        order.setOrderDate(LocalDateTime.now()); // Use LocalDateTime.now() for the current date and time
+        order.setOrderDate(LocalDateTime.now());
 
-        // Calculate the total amount from the cart items
+        // Calculate the total amount from cart items
         double totalAmount = 0;
         List<Cart> cartItems = cartRepository.findByUser(user);
         for (Cart cart : cartItems) {
@@ -103,10 +140,9 @@ public class CartService {
         order.setTotalAmount(totalAmount);
 
         // Save the order
-        System.out.println("Before saving order");
         order = orderRepository.save(order);
 
-        // Store the Cart items as OrderItems
+        // Save the cart items as order items
         for (Cart cartItem : cartItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
@@ -117,7 +153,7 @@ public class CartService {
             orderItemRepository.save(orderItem);
         }
 
-        // Delete the Cart items
+        // Clear the cart after placing the order
         cartRepository.deleteAll(cartItems);
     }
 }
