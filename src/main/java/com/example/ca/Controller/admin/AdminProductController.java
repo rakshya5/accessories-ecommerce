@@ -76,6 +76,7 @@ public class AdminProductController {
             return "redirect:/admin/login";
         }
 
+        // Handle image upload
         if (!image.isEmpty()) {
             try {
                 String fileName = image.getOriginalFilename();
@@ -89,6 +90,7 @@ public class AdminProductController {
             }
         }
 
+        // Save the product, including the description
         productService.createProduct(product);
         return "redirect:/admin/ViewProducts";
     }
@@ -125,6 +127,7 @@ public class AdminProductController {
                 Product existingProduct = existingProductOptional.get();
                 existingProduct.setName(product.getName());
                 existingProduct.setPrice(product.getPrice());
+                existingProduct.setDescription(product.getDescription()); // Add this line to update the description
 
                 if (!image.isEmpty()) {
                     String fileName = image.getOriginalFilename();
@@ -143,6 +146,7 @@ public class AdminProductController {
 
         return "redirect:/admin/ViewProducts";
     }
+
 
     // Delete product
     @GetMapping("/delete-product/{id}")

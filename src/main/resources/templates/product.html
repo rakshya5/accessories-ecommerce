@@ -58,20 +58,21 @@
 
                 <!-- Product Items -->
                 <div class="product-card" th:each="product : ${products}">
-                    <form action="/cart/add" method="POST">
-                        <img th:src="@{/images/{path}(path=${product.imageUrl})}" class="center">
-                        <h3 th:text="${product.name}"></h3>
-                        <p th:text="${' Rs. ' + product.price}"></p>
-                        <input type="hidden" name="productID" th:value="${product.id}" />
-                        <input type="hidden" name="quantity" value="1" />
-                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
-                    </form>
+    <form action="/cart/add" method="POST">
+        <img th:src="@{/images/{path}(path=${product.imageUrl})}" class="center">
+        <h3 th:text="${product.name}"></h3>
+        <p class="product-description" th:text="${product.description}"></p> <!-- Description -->
+        <p th:text="${' Rs. ' + product.price}"></p>
+        <input type="hidden" name="productID" th:value="${product.id}" />
+        <input type="hidden" name="quantity" value="1" />
+        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+    </form>
+    <form action="/product/buyNow" method="POST">
+        <input type="hidden" name="productID" th:value="${product.id}" />
+        <button type="submit" class="buy-now-btn">Buy Now</button>
+    </form>
+</div>
 
-                    <form action="/product/buyNow" method="POST">
-                        <input type="hidden" name="productID" th:value="${product.id}" />
-                        <button type="submit" class="buy-now-btn">Buy Now</button>
-                    </form>
-                </div>
             </div>
         </section>
     </main>

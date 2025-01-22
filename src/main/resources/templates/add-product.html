@@ -5,20 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
     <link rel="stylesheet" href="/css/add-product.css">
+    <script>
+        function validateForm(event) {
+            let isValid = true;
 
+            // Clear previous error messages
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+            const name = document.getElementById('name').value.trim();
+            const price = document.getElementById('price').value.trim();
+            const imageInput = document.getElementById('image');
+
+            // Validate product name
+            if (name === "") {
+                document.getElementById('nameError').textContent = "Product name is required.";
+                isValid = false;
+            }
+
+            // Validate price
+            const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/; // Allows only non-negative numbers
+            if (!priceRegex.test(price)) {
+                document.getElementById('priceError').textContent = "Price must be a valid non-negative number (e.g., 10 or 10.99).";
+                isValid = false;
+            }
+
+            // Validate image selection
+            if (imageInput.files.length === 0) {
+                document.getElementById('imageError').textContent = "Please select an image file.";
+                isValid = false;
+            } else {
+                // Additional file type and size checks
+                const file = imageInput.files[0];
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    document.getElementById('imageError').textContent = "Only JPG, PNG, or GIF image files are allowed.";
+                    isValid = false;
+                } else if (file.size > 2 * 1024 * 1024) { // 2 MB limit
+                    document.getElementById('imageError').textContent = "Image file size must not exceed 2 MB.";
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Add New Product</h1>
-    <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
+    <form action="/admin/add-product" method="POST" enctype="multipart/form-data" onsubmit="validateForm(event)">
+        <!-- Product Name -->
         <label for="name">Product Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
+        <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            required 
+            minlength="3" 
+            maxlength="100"
+        >
+        <span id="nameError" class="error-message" style="color: red;"></span>
+        <br><br>
 
+        <!-- Price -->
         <label for="price">Price:</label>
-        <input type="text" id="price" name="price" required><br><br>
+        <input 
+            type="text" 
+            id="price" 
+            name="price" 
+            required 
+            pattern="^[0-9]+(\.[0-9]{1,2})?$" 
+            title="Enter a valid non-negative price (e.g., 10 or 10.99)"
+        >
+        <span id="priceError" class="error-message" style="color: red;"></span>
+        <br><br>
 
+        <!-- Image -->
         <label for="image">Choose Image:</label>
-        <input type="file" id="image" name="image" accept="image/*" required><br><br>
+        <input 
+            type="file" 
+            id="image" 
+            name="image" 
+            accept="image/*" 
+            required
+        >
+        <span id="imageError" class="error-message" style="color: red;"></span>
+        <br><br>
+        
+        <!-- Description -->
+<label for="description">Product Description:</label>
+<textarea 
+    id="description" 
+    name="description" 
+    required
+    rows="4" 
+    cols="50" 
+    
+></textarea>
+<span id="descriptionError" class="error-message" style="color: red;"></span>
+<br><br>
 
+        
+
+        <!-- Submit Button -->
         <button type="submit">Add Product</button>
     </form>
 </body>

@@ -5,20 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
     <link rel="stylesheet" href="/css/edit-product.css">
+    <script>
+        function validateForm(event) {
+            let isValid = true;
+
+            // Clear previous error messages
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+            const name = document.getElementById('name').value.trim();
+            const price = document.getElementById('price').value.trim();
+            const imageInput = document.getElementById('image');
+
+            // Validate name
+            if (name === "") {
+                document.getElementById('nameError').textContent = "Product name is required.";
+                isValid = false;
+            }
+
+            // Validate price
+            const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/; // Allows only non-negative numbers
+            if (!priceRegex.test(price)) {
+                document.getElementById('priceError').textContent = "Price must be a valid non-negative number (e.g., 10 or 10.99).";
+                isValid = false;
+            }
+
+            // Validate image selection
+            if (imageInput.files.length === 0) {
+                document.getElementById('imageError').textContent = "Please select an image file.";
+                isValid = false;
+            } else {
+                const file = imageInput.files[0];
+               const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+
+                if (!allowedTypes.includes(file.type)) {
+                    document.getElementById('imageError').textContent = "Only JPG, PNG, or GIF image files are allowed.";
+                    isValid = false;
+                } else if (file.size > 2 * 1024 * 1024) { // 2 MB limit
+                    document.getElementById('imageError').textContent = "Image file size must not exceed 2 MB.";
+                    isValid = false;
+                } else {
+                    // Validate image dimensions
+                    const img = new Image();
+                    img.onload = function () {
+                        const maxWidth = 2000; // Example max width
+                        const maxHeight = 2000; // Example max height
+                        const maxAspectRatio = 3; // Example max aspect ratio for long images
+
+                        if (img.width > maxWidth || img.height > maxHeight) {
+                            document.getElementById('imageError').textContent = 
+                                "Image dimensions must not exceed " + maxWidth + "x" + maxHeight + " pixels.";
+                            isValid = false;
+                        } else if (img.width / img.height > maxAspectRatio || img.height / img.width > maxAspectRatio) {
+                            document.getElementById('imageError').textContent = 
+                                "Long images with an extreme aspect ratio are not allowed.";
+                            isValid = false;
+                        }
+                        if (!isValid) {
+                            event.preventDefault(); // Prevent form submission
+                        }
+                    };
+                    img.src = URL.createObjectURL(file); // Trigger image loading
+                }
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Edit Product</h1>
-    <!-- Corrected form action using th:action -->
-    <form th:action="@{/admin/edit-product/{id}(id=${product.id})}" method="POST" enctype="multipart/form-data">
+    <form 
+        th:action="@{/admin/edit-product/{id}(id=${product.id})}" 
+        method="POST" 
+        enctype="multipart/form-data"
+        onsubmit="validateForm(event)"
+    >
+        <!-- Product Name -->
         <label for="name">Product Name:</label>
-        <input type="text" id="name" name="name" th:value="${product.name}" required><br><br>
+        <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            th:value="${product.name}" 
+            required
+            minlength="3"
+            maxlength="100"
+        >
+        <span id="nameError" class="error-message" style="color: red;"></span>
+        <br><br>
 
+        <!-- Price -->
         <label for="price">Price:</label>
-        <input type="text" id="price" name="price" th:value="${product.price}" required><br><br>
+        <input 
+            type="text" 
+            id="price" 
+            name="price" 
+            th:value="${product.price}" 
+            required
+            pattern="^[0-9]+(\.[0-9]{1,2})?$"
+            title="Enter a valid non-negative price"
+        >
+        <span id="priceError" class="error-message" style="color: red;"></span>
+        <br><br>
 
-        <label for="image">Choose Image:</label>
-        <input type="file" id="image" name="image" accept="image/*"><br><br>
+        <!-- Image -->
+        <input 
+    type="file" 
+    id="image" 
+    name="image" 
+    accept="image/jpeg, image/png, image/gif, image/webp"
+>
 
+        <span id="imageError" class="error-message" style="color: red;"></span>
+        <br><br>
+
+        <!-- Description -->
+        <label for="description">Product Description:</label>
+        <textarea 
+            id="description" 
+            name="description" 
+            required
+            rows="4" 
+            cols="50" 
+            th:text="${product.description}"
+        ></textarea>
+        <span id="descriptionError" class="error-message" style="color: red;"></span>
+        <br><br>
+
+        <!-- Submit Button -->
         <button type="submit">Update Product</button>
     </form>
 </body>

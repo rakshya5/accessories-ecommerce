@@ -12,9 +12,21 @@ public class Product {
     private String name;
     private double price;
     private String imageUrl;
+    @Column(columnDefinition = "TEXT") // To allow longer descriptions
+    private String description;
     
 
     // Getters and Setters
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    
     public Long getId() {
         return id;
     }

@@ -1,44 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form</title>
+    <title>Registration</title>
     <link rel="stylesheet" href="/css/register.css">
-</head>
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
 
+        input.invalid {
+            border-color: red;
+        }
+
+        .success-message {
+            color: green;
+            font-size: 1.1em;
+            text-align: center;
+            display: none;
+        }
+    </style>
+    <script>
+        function validateRegistrationForm(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Clear previous errors
+            const errorMessages = document.querySelectorAll(".error-message");
+            errorMessages.forEach((msg) => (msg.style.display = "none"));
+
+            const inputs = document.querySelectorAll("input");
+            inputs.forEach((input) => input.classList.remove("invalid"));
+
+            let isValid = true;
+
+            // Get form values
+            const fullname = document.getElementById("fullname").value.trim();
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            // Validate full name
+            if (!/^[a-zA-Z\s]{3,50}$/.test(fullname)) {
+                const fullnameError = document.getElementById("fullnameError");
+                fullnameError.style.display = "block";
+                document.getElementById("fullname").classList.add("invalid");
+                isValid = false;
+            }
+
+            // Validate username
+            if (!/^[a-zA-Z0-9_]{4,20}$/.test(username)) {
+                const usernameError = document.getElementById("usernameError");
+                usernameError.style.display = "block";
+                document.getElementById("username").classList.add("invalid");
+                isValid = false;
+            }
+
+            // Validate email
+            if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                const emailError = document.getElementById("emailError");
+                emailError.style.display = "block";
+                document.getElementById("email").classList.add("invalid");
+                isValid = false;
+            }
+
+            // Validate password
+            if (!/^(?=.*\d)[a-zA-Z\d]{8,20}$/.test(password)) {
+                const passwordError = document.getElementById("passwordError");
+                passwordError.style.display = "block";
+                document.getElementById("password").classList.add("invalid");
+                isValid = false;
+            }
+
+           // If all fields are valid, show the modal
+            if (isValid) {
+                const modal = document.getElementById("successModal");
+                modal.style.display = "flex";
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("successModal");
+            modal.style.display = "none";
+        
+        // Redirect to login page after closing the modal
+    window.location.href = "/login";
+}
+          </script>
+    
+</head>
 <body>
     <h1>Registration</h1>
-    <div>
-        <form action="/register" method="post">
-            <br>
-            <label for="fullname">Fullname</label>
-            <input type="text" id="fullname" name="fullname" required>
-            </br>
 
-            <br>
+    <!-- Registration Form -->
+    <form onsubmit="validateRegistrationForm(event)">
+        <!-- Full Name -->
+        <div>
+            <label for="fullname">Full Name</label>
+            <input type="text" id="fullname" name="fullname" required />
+            <div id="fullnameError" class="error-message">
+                Full name must be 3-50 characters long and contain only letters and spaces.
+            </div>
+        </div>
+
+        <!-- Username -->
+        <div>
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
-            <span th:if="${error?.username}" th:text="${error.username}" ></span>
-            </br>
+            <input type="text" id="username" name="username" required />
+            <div id="usernameError" class="error-message">
+                Username must be 4-20 characters long and contain only letters, numbers, and underscores.
+            </div>
+        </div>
 
-            <br>
+        <!-- Email -->
+        <div>
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Please enter a valid email address.">
-            <span th:if="${error?.email}" th:text="${error?.email}" style="color: red;"></span>
-            </br>
+            <input type="email" id="email" name="email" required />
+            <div id="emailError" class="error-message">
+                Please enter a valid email address.
+            </div>
+        </div>
 
-            <br>
+        <!-- Password -->
+        <div>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-            </br>
+            <input type="password" id="password" name="password" required />
+            <div id="passwordError" class="error-message">
+                Password must be 8-20 characters long and include at least one number.
+            </div>
+        </div>
 
-            <br>
-            <input type="submit" value="Register">
-            </br>
-        </form>
+        <!-- Submit Button -->
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2>Registration Successful!</h2>
+            <p>Welcome to our platform.</p>
+            <button onclick="closeModal()">OK</button>
+        </div>
     </div>
+    
 </body>
-
 </html>

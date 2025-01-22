@@ -132,6 +132,33 @@ main {
     justify-content: space-between;
 }
 
+
+
+
+/* Product Description */
+.product-card .product-description {
+    font-size: 14px;
+    color: #666;  /* Lighter color for description text */
+    line-height: 1.5;
+    margin-bottom: 15px; /* Adds space below the description */
+    height: 60px; /* Limits height to 3 lines */
+    overflow: hidden; /* Ensures that the text is truncated if it exceeds the height */
+    text-overflow: ellipsis; /* Adds ellipsis (...) when content overflows */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limits the description to 3 lines */
+    -webkit-box-orient: vertical;
+}
+
+/* Remove hover effect */
+.product-card:hover .product-description {
+    height: 60px; /* Keep height fixed, don't expand */
+    overflow: hidden; /* Keep overflow hidden */
+    -webkit-line-clamp: 3; /* Keep the line clamp active */
+}
+
+
+
+
 /* Product Card Image */
 .product-card img {
     width: 100%;

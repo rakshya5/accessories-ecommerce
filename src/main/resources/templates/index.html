@@ -56,32 +56,34 @@
     </header>
 
     <!-- Featured Products Section -->
-    <section class="featured-products">
-        <h3>Featured Products</h3>
-        <div class="product-grid">
-            <!-- Dynamically Render Products -->
-            <div th:each="product : ${featuredProducts}" class="product-card">
-                <form action="/cart/add" method="POST">
-                    <img th:src="@{/images/{path}(path=${product.imageUrl})}" alt="Product Image">
-                    <h4 th:text="${product.name}"></h4>
-                    <p class="product-price" th:text="${'Rs. ' + product.price}"></p>
-                    <input type="hidden" name="productID" th:value="${product.id}" />
-                    <input type="hidden" name="quantity" value="1" />
-                    <button type="submit" class="add-to-cart-btn">Add to Cart</button>
-                </form>
+<section class="featured-products">
+    <h3>Featured Products</h3>
+    <div class="product-grid">
+        <!-- Dynamically Render Products -->
+        <div th:each="product : ${featuredProducts}" class="product-card">
+            <form action="/cart/add" method="POST">
+                <img th:src="@{/images/{path}(path=${product.imageUrl})}" alt="Product Image">
+                <h4 th:text="${product.name}"></h4>
+                <p class="product-description" th:text="${product.description}"></p> <!-- Added description -->
+                <p class="product-price" th:text="${'Rs. ' + product.price}"></p>
+                <input type="hidden" name="productID" th:value="${product.id}" />
+                <input type="hidden" name="quantity" value="1" />
+                <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+            </form>
 
-                <form action="/product/buyNow" method="POST">
-                    <input type="hidden" name="productID" th:value="${product.id}" />
-                    <button type="submit" class="buy-now-btn">Buy Now</button>
-                </form>
-            </div>
-
-            <!-- No Products Message -->
-            <div th:if="${featuredProducts == null or featuredProducts.isEmpty()}" class="empty-products-message">
-                <h2>No Featured Products Available</h2>
-            </div>
+            <form action="/product/buyNow" method="POST">
+                <input type="hidden" name="productID" th:value="${product.id}" />
+                <button type="submit" class="buy-now-btn">Buy Now</button>
+            </form>
         </div>
-    </section>
+
+        <!-- No Products Message -->
+        <div th:if="${featuredProducts == null or featuredProducts.isEmpty()}" class="empty-products-message">
+            <h2>No Featured Products Available</h2>
+        </div>
+    </div>
+</section>
+
 
     <!-- Footer -->
     <footer>
